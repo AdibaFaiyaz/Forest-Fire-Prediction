@@ -31,9 +31,10 @@ interface PredictionResult {
 
 interface PredictionCheckPageProps {
   onBack: () => void;
+  onPredictionResult: (result: PredictionResult, formData: PredictionData) => void;
 }
 
-export default function PredictionCheckPage({ onBack }: PredictionCheckPageProps) {
+export default function PredictionCheckPage({ onBack, onPredictionResult }: PredictionCheckPageProps) {
   const [formData, setFormData] = useState<PredictionData>({
     FFMC: '',
     DMC: '',
@@ -69,38 +70,76 @@ export default function PredictionCheckPage({ onBack }: PredictionCheckPageProps
     setLoading(true);
     setPrediction(null);
 
-    try {
-      const response = await fetch('http://localhost:5000/predict', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          FFMC: parseFloat(formData.FFMC),
-          DMC: parseFloat(formData.DMC),
-          DC: parseFloat(formData.DC),
-          ISI: parseFloat(formData.ISI),
-          temp: parseFloat(formData.temp),
-          RH: parseFloat(formData.RH),
-          wind: parseFloat(formData.wind),
-          rain: parseFloat(formData.rain),
-          month: parseInt(formData.month),
-          day: parseInt(formData.day)
-        })
-      });
+    // Try multiple API endpoints
+    const apiEndpoints = [
+      'http://localhost:5000/predict',
+      'http://127.0.0.1:5000/predict',
+      'http://192.168.1.10:5000/predict'
+    ];
 
-      const result = await response.json();
-      
-      if (response.ok) {
-        setPrediction(result);
-      } else {
-        Alert.alert('Error', result.error || 'Failed to get prediction');
+    let lastError = '';
+    
+    for (const endpoint of apiEndpoints) {
+      try {
+        console.log(`Trying endpoint: ${endpoint}`);
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            FFMC: parseFloat(formData.FFMC),
+            DMC: parseFloat(formData.DMC),
+            DC: parseFloat(formData.DC),
+            ISI: parseFloat(formData.ISI),
+            temp: parseFloat(formData.temp),
+            RH: parseFloat(formData.RH),
+            wind: parseFloat(formData.wind),
+            rain: parseFloat(formData.rain),
+            month: parseInt(formData.month),
+            day: parseInt(formData.day)
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+        const result = await response.json();
+        
+        if (response.ok) {
+          setPrediction(result);
+          onPredictionResult(result, formData);
+          setLoading(false);
+          return; // Success, exit the loop
+        } else {
+          lastError = result.error || 'Failed to get prediction';
+          console.log(`Error from ${endpoint}:`, lastError);
+        }
+      } catch (error: any) {
+        if (error.name === 'AbortError') {
+          lastError = `Request timed out to ${endpoint}`;
+        } else if (error.message.includes('Network request failed')) {
+          lastError = `Network error - server might not be running at ${endpoint}`;
+        } else {
+          lastError = `Connection failed to ${endpoint}: ${error.message}`;
+        }
+        console.log(`Failed to connect to ${endpoint}:`, error);
       }
-    } catch (error) {
-      Alert.alert('Error', 'Unable to connect to the server. Please make sure the backend is running.');
-    } finally {
-      setLoading(false);
     }
+    
+    // If we get here, all endpoints failed
+    setLoading(false);
+    Alert.alert(
+      'Connection Error', 
+      `Unable to connect to the server.\n\nLast error: ${lastError}\n\nPlease:\n\n` +
+      '1. Make sure the backend server is running\n' +
+      '2. Open terminal and run: cd backend && python app.py\n' +
+      '3. Check that the server shows "Running on http://localhost:5000"\n' +
+      '4. Verify Flask and Flask-CORS are installed'
+    );
   };
 
   const clearForm = () => {

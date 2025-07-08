@@ -19,7 +19,7 @@ export default function HomePage({ onNavigateToPrediction }: HomePageProps) {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Hero Section */}
       <View style={styles.heroSection}>
-        <Text style={styles.heroTitle}>🔥 Forest Fire Detection</Text>
+        <Text style={styles.heroTitle}>Forest Fire Detection</Text>
         <Text style={styles.heroSubtitle}>AI-Powered Risk Assessment System</Text>
         <Text style={styles.heroDescription}>
           Predict forest fire risks using advanced machine learning algorithms 
