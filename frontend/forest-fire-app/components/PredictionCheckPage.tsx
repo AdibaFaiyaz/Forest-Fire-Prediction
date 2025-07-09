@@ -9,7 +9,8 @@ import {
   Alert,
   ActivityIndicator
 } from 'react-native';
-
+import { db } from '../firebase';
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
 interface PredictionData {
   FFMC: string;
   DMC: string;
@@ -50,6 +51,40 @@ export default function PredictionCheckPage({ onBack, onPredictionResult }: Pred
   
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Function to save data to Firebase
+  const saveToFirebase = async (predictionResult: PredictionResult, inputData: PredictionData) => {
+    setSaving(true);
+    const dataToSave = {
+      FFMC: parseFloat(inputData.FFMC),
+      DMC: parseFloat(inputData.DMC),
+      DC: parseFloat(inputData.DC),
+      ISI: parseFloat(inputData.ISI),
+      temp: parseFloat(inputData.temp),
+      RH: parseFloat(inputData.RH),
+      wind: parseFloat(inputData.wind),
+      rain: parseFloat(inputData.rain),
+      month: parseInt(inputData.month),
+      day: parseInt(inputData.day),
+      predictedRisk: predictionResult.risk_level,
+      riskScore: predictionResult.risk_score,
+      fireRisk: predictionResult.fire_risk,
+      timestamp: new Date().toISOString(),
+      createdAt: new Date()
+    };
+
+    try {
+      await addDoc(collection(db, "fire_predictions"), dataToSave);
+      console.log("Data saved to Firestore successfully");
+      Alert.alert("Success", "Prediction data saved to Firebase!");
+    } catch (error) {
+      console.error("Error saving to Firestore:", error);
+      Alert.alert("Error", "Failed to save data to Firebase. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleInputChange = (field: keyof PredictionData, value: string) => {
     setFormData(prev => ({
@@ -112,6 +147,10 @@ export default function PredictionCheckPage({ onBack, onPredictionResult }: Pred
         if (response.ok) {
           setPrediction(result);
           onPredictionResult(result, formData);
+          
+          // Save to Firebase after successful prediction
+          await saveToFirebase(result, formData);
+          
           setLoading(false);
           return; // Success, exit the loop
         } else {
@@ -307,10 +346,15 @@ export default function PredictionCheckPage({ onBack, onPredictionResult }: Pred
           <TouchableOpacity 
             style={[styles.button, styles.predictButton]} 
             onPress={handlePredict}
-            disabled={loading}
+            disabled={loading || saving}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
+            ) : saving ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <ActivityIndicator color="#fff" size="small" />
+                <Text style={[styles.buttonText, { marginLeft: 8 }]}>Saving...</Text>
+              </View>
             ) : (
               <Text style={styles.buttonText}>🔍 Predict Fire Risk</Text>
             )}
