@@ -135,7 +135,7 @@ export default function HomePage({ onNavigateToPrediction }: HomePageProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#f5f5f5',
   },
   heroSection: {
     backgroundColor: '#2d5a27',
@@ -172,16 +172,21 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 20,
     textAlign: 'center',
   },
   featureCard: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 12,
     marginBottom: 15,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   featureIcon: {
     fontSize: 32,
@@ -190,29 +195,34 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 8,
     textAlign: 'center',
   },
   featureDescription: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#666',
     textAlign: 'center',
     lineHeight: 20,
   },
   howItWorksSection: {
     padding: 20,
-    backgroundColor: '#222',
+    backgroundColor: '#fff',
     marginHorizontal: 20,
     borderRadius: 15,
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   stepCard: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
     padding: 15,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#f8f8f8',
     borderRadius: 10,
   },
   stepNumber: {
@@ -229,27 +239,32 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 5,
   },
   stepDescription: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#666',
     lineHeight: 18,
   },
   safetySection: {
     padding: 20,
   },
   safetyCard: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 12,
     borderLeftWidth: 4,
     borderLeftColor: '#FFA500',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   safetyText: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#666',
     lineHeight: 22,
   },
   actionSection: {
@@ -286,7 +301,7 @@ const styles = StyleSheet.create({
   },
   footerSubtext: {
     fontSize: 12,
-    color: '#555',
+    color: '#999',
     marginTop: 5,
   },
 });

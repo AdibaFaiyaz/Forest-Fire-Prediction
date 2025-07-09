@@ -377,7 +377,7 @@ export default function PredictionCheckPage({ onBack, onPredictionResult }: Pred
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#f5f5f5',
   },
   header: {
     backgroundColor: '#2d5a27',
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -421,18 +421,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#666',
     marginBottom: 5,
     fontWeight: '500',
   },
   input: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#fff',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: '#fff',
+    color: '#333',
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: '#e0e0e0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   buttonContainer: {
     marginTop: 20,
@@ -445,11 +450,16 @@ const styles = StyleSheet.create({
   },
   predictButton: {
     backgroundColor: '#2d5a27',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   clearButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#666',
+    borderColor: '#ccc',
   },
   buttonText: {
     color: '#fff',
@@ -457,25 +467,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   clearButtonText: {
-    color: '#ccc',
+    color: '#666',
     fontSize: 16,
     fontWeight: '500',
   },
   resultContainer: {
     margin: 20,
     padding: 20,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#fff',
     borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   resultTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 15,
     textAlign: 'center',
   },
   riskCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#f8f8f8',
     padding: 20,
     borderRadius: 10,
     borderWidth: 2,
@@ -489,15 +504,15 @@ const styles = StyleSheet.create({
   },
   riskScore: {
     fontSize: 18,
-    color: '#fff',
+    color: '#333',
     marginBottom: 5,
   },
   riskStatus: {
     fontSize: 16,
-    color: '#ccc',
+    color: '#666',
   },
   recommendationCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#f8f8f8',
     padding: 15,
     borderRadius: 10,
     borderLeftWidth: 4,
@@ -507,16 +522,16 @@ const styles = StyleSheet.create({
   recommendationTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 8,
   },
   recommendationText: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#666',
     lineHeight: 20,
   },
   safetyTipsCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#f8f8f8',
     padding: 15,
     borderRadius: 10,
     borderLeftWidth: 4,
@@ -525,12 +540,12 @@ const styles = StyleSheet.create({
   safetyTipsTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#333',
     marginBottom: 8,
   },
   safetyTipsText: {
     fontSize: 14,
-    color: '#ccc',
+    color: '#666',
     lineHeight: 20,
   },
 });
