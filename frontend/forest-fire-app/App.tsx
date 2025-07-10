@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import HomePage from './components/HomePage';
 import PredictionCheckPage from './components/PredictionCheckPage';
 import PredictionOutcome from './components/PredictionOutcome';
+import PredictionHistory from './components/PredictionHistory';
 
 interface PredictionResult {
   fire_risk: boolean;
@@ -12,7 +13,7 @@ interface PredictionResult {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'prediction' | 'outcome'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'prediction' | 'outcome' | 'history'>('home');
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
   const [formData, setFormData] = useState<any>(null);
 
@@ -22,6 +23,10 @@ export default function App() {
 
   const navigateToHome = () => {
     setCurrentPage('home');
+  };
+
+  const navigateToHistory = () => {
+    setCurrentPage('history');
   };
 
   const navigateToOutcome = (result: PredictionResult, data: any) => {
@@ -35,7 +40,10 @@ export default function App() {
       <StatusBar style="dark" />
       
       {currentPage === 'home' && (
-        <HomePage onNavigateToPrediction={navigateToPrediction} />
+        <HomePage 
+          onNavigateToPrediction={navigateToPrediction}
+          onNavigateToHistory={navigateToHistory}
+        />
       )}
       
       {currentPage === 'prediction' && (
@@ -51,6 +59,10 @@ export default function App() {
           prediction={predictionResult}
           formData={formData}
         />
+      )}
+
+      {currentPage === 'history' && (
+        <PredictionHistory onBack={navigateToHome} />
       )}
     </SafeAreaView>
   );

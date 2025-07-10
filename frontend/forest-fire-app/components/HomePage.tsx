@@ -12,9 +12,10 @@ const { width } = Dimensions.get('window');
 
 interface HomePageProps {
   onNavigateToPrediction: () => void;
+  onNavigateToHistory: () => void;
 }
 
-export default function HomePage({ onNavigateToPrediction }: HomePageProps) {
+export default function HomePage({ onNavigateToPrediction, onNavigateToHistory }: HomePageProps) {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Hero Section */}
@@ -120,6 +121,13 @@ export default function HomePage({ onNavigateToPrediction }: HomePageProps) {
           onPress={onNavigateToPrediction}
         >
           <Text style={styles.primaryButtonText}>🔍 Start Risk Assessment</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.secondaryButton} 
+          onPress={onNavigateToHistory}
+        >
+          <Text style={styles.secondaryButtonText}>📋 View Prediction History</Text>
         </TouchableOpacity>
       </View>
 
@@ -286,6 +294,22 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#2d5a27',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 25,
+    minWidth: width * 0.8,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  secondaryButtonText: {
+    color: '#2d5a27',
     fontSize: 18,
     fontWeight: 'bold',
   },
