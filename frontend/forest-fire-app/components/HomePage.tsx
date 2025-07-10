@@ -13,9 +13,10 @@ const { width } = Dimensions.get('window');
 interface HomePageProps {
   onNavigateToPrediction: () => void;
   onNavigateToHistory: () => void;
+  onNavigateToRiskMap: () => void;
 }
 
-export default function HomePage({ onNavigateToPrediction, onNavigateToHistory }: HomePageProps) {
+export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, onNavigateToRiskMap }: HomePageProps) {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Hero Section */}
@@ -128,6 +129,13 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory }
           onPress={onNavigateToHistory}
         >
           <Text style={styles.secondaryButtonText}>📋 View Prediction History</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.mapButton} 
+          onPress={onNavigateToRiskMap}
+        >
+          <Text style={styles.mapButtonText}>🗺️ View Risk Map</Text>
         </TouchableOpacity>
       </View>
 
@@ -310,6 +318,25 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#2d5a27',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  mapButton: {
+    backgroundColor: '#4a7c59',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 25,
+    minWidth: width * 0.8,
+    alignItems: 'center',
+    marginTop: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  mapButtonText: {
+    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },

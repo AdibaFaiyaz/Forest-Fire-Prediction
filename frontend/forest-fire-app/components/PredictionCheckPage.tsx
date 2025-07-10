@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { db } from '../firebase';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import * as Location from 'expo-location';
 interface PredictionData {
   FFMC: string;
   DMC: string;
@@ -33,9 +34,10 @@ interface PredictionResult {
 interface PredictionCheckPageProps {
   onBack: () => void;
   onPredictionResult: (result: PredictionResult, formData: PredictionData) => void;
+  onNavigateToRiskMap: () => void;
 }
 
-export default function PredictionCheckPage({ onBack, onPredictionResult }: PredictionCheckPageProps) {
+export default function PredictionCheckPage({ onBack, onPredictionResult, onNavigateToRiskMap }: PredictionCheckPageProps) {
   const [formData, setFormData] = useState<PredictionData>({
     FFMC: '',
     DMC: '',
@@ -53,34 +55,40 @@ export default function PredictionCheckPage({ onBack, onPredictionResult }: Pred
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const getCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Allow location access to store prediction location.');
+      return null;
+    }
+
+    const location = await Location.getCurrentPositionAsync({});
+    return {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+  };
+
   // Function to save data to Firebase
   const saveToFirebase = async (predictionResult: PredictionResult, inputData: PredictionData) => {
     setSaving(true);
+    const location = await getCurrentLocation();
+
     const dataToSave = {
-      FFMC: parseFloat(inputData.FFMC),
-      DMC: parseFloat(inputData.DMC),
-      DC: parseFloat(inputData.DC),
-      ISI: parseFloat(inputData.ISI),
-      temp: parseFloat(inputData.temp),
-      RH: parseFloat(inputData.RH),
-      wind: parseFloat(inputData.wind),
-      rain: parseFloat(inputData.rain),
-      month: parseInt(inputData.month),
-      day: parseInt(inputData.day),
+      ...inputData,
       predictedRisk: predictionResult.risk_level,
       riskScore: predictionResult.risk_score,
       fireRisk: predictionResult.fire_risk,
+      location: location,
       timestamp: new Date().toISOString(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     try {
       await addDoc(collection(db, "fire_predictions"), dataToSave);
-      console.log("Data saved to Firestore successfully");
       Alert.alert("Success", "Prediction data saved to Firebase!");
     } catch (error) {
-      console.error("Error saving to Firestore:", error);
-      Alert.alert("Error", "Failed to save data to Firebase. Please try again.");
+      Alert.alert("Error", "Failed to save data to Firebase.");
     } finally {
       setSaving(false);
     }
@@ -412,6 +420,14 @@ export default function PredictionCheckPage({ onBack, onPredictionResult }: Pred
               • Follow local fire restrictions
             </Text>
           </View>
+
+          {/* Navigation to Risk Map */}
+          <TouchableOpacity 
+            style={styles.mapButton} 
+            onPress={onNavigateToRiskMap}
+          >
+            <Text style={styles.mapButtonText}>🗺️ View Risk Map</Text>
+          </TouchableOpacity>
         </View>
       )}
     </ScrollView>
@@ -591,5 +607,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 20,
+  },
+  mapButton: {
+    backgroundColor: '#2d5a27',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  mapButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
