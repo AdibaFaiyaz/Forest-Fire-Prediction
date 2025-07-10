@@ -4,12 +4,23 @@ import MapView, { Marker } from 'react-native-maps';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+interface FirePrediction {
+  location: Location;
+  predictedRisk: string;
+  riskScore: number;
+}
+
 interface RiskMapProps {
   onBack: () => void;
 }
 
 export default function RiskMap({ onBack }: RiskMapProps) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<FirePrediction[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getColor = (riskLevel: string) => {
@@ -23,12 +34,17 @@ export default function RiskMap({ onBack }: RiskMapProps) {
 
   useEffect(() => {
     const fetchPredictions = async () => {
-      const snapshot = await getDocs(collection(db, 'fire_predictions'));
-      const results = snapshot.docs
-        .map(doc => doc.data())
-        .filter(item => item.location?.latitude && item.location?.longitude);
-      setData(results);
-      setLoading(false);
+      try {
+        const snapshot = await getDocs(collection(db, 'fire_predictions'));
+        const results = snapshot.docs
+          .map(doc => doc.data() as FirePrediction)
+          .filter(item => item.location?.latitude && item.location?.longitude);
+        setData(results);
+      } catch (error) {
+        console.error('Error fetching predictions:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchPredictions();
@@ -37,8 +53,26 @@ export default function RiskMap({ onBack }: RiskMapProps) {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#000" />
-        <Text>Loading Fire Risk Map...</Text>
+        <ActivityIndicator size="large" color="#2d5a27" />
+        <Text style={styles.loadingText}>Loading Fire Risk Map...</Text>
+      </View>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.title}>🗺️ Fire Risk Map</Text>
+          <Text style={styles.subtitle}>View All Risk Predictions</Text>
+        </View>
+        <View style={styles.centered}>
+          <Text style={styles.noDataText}>No location data available</Text>
+          <Text style={styles.noDataSubtext}>Make predictions with location data to see them on the map</Text>
+        </View>
       </View>
     );
   }
@@ -57,8 +91,8 @@ export default function RiskMap({ onBack }: RiskMapProps) {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: data[0]?.location.latitude || 20.5937,
-          longitude: data[0]?.location.longitude || 78.9629,
+          latitude: data.length > 0 ? data[0].location.latitude : 20.5937,
+          longitude: data.length > 0 ? data[0].location.longitude : 78.9629,
           latitudeDelta: 10,
           longitudeDelta: 10,
         }}
@@ -119,5 +153,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
+  },
+  noDataText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  noDataSubtext: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    paddingHorizontal: 40,
   },
 });
