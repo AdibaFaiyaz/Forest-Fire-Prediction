@@ -1,4 +1,14 @@
 import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
+
+import { MaterialIcons } from '@expo/vector-icons';
+
+import Feather from '@expo/vector-icons/Feather';
+
+import Entypo from '@expo/vector-icons/Entypo';
+
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+
 import { 
   StyleSheet, 
   Text, 
@@ -34,7 +44,7 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, 
         <Text style={styles.sectionTitle}>Key Features</Text>
         
         <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>🤖</Text>
+          <Text style={styles.featureIcon}><MaterialIcons name="computer" size={24} color="black" /></Text>
           <Text style={styles.featureTitle}>AI-Powered Prediction</Text>
           <Text style={styles.featureDescription}>
             Advanced machine learning algorithms analyze weather patterns to predict fire risks
@@ -42,7 +52,7 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, 
         </View>
 
         <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>🌡️</Text>
+          <Text style={styles.featureIcon}><Ionicons name="thermometer" size={32} color="black" /></Text>
           <Text style={styles.featureTitle}>Real-Time Weather Analysis</Text>
           <Text style={styles.featureDescription}>
             Monitor temperature, humidity, wind speed, and other critical weather factors
@@ -50,7 +60,7 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, 
         </View>
 
         <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>⚡</Text>
+          <Text style={styles.featureIcon}><Feather name="zap" size={24} color="black" /></Text>
           <Text style={styles.featureTitle}>Instant Risk Assessment</Text>
           <Text style={styles.featureDescription}>
             Get immediate fire risk levels with actionable recommendations
@@ -58,7 +68,7 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, 
         </View>
 
         <View style={styles.featureCard}>
-          <Text style={styles.featureIcon}>📊</Text>
+          <Text style={styles.featureIcon}><Entypo name="bar-graph" size={24} color="black" /></Text>
           <Text style={styles.featureTitle}>Detailed Analytics</Text>
           <Text style={styles.featureDescription}>
             Comprehensive risk scores and safety recommendations based on data analysis
@@ -103,7 +113,7 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, 
 
       {/* Safety Information */}
       <View style={styles.safetySection}>
-        <Text style={styles.sectionTitle}>🛡️ Safety First</Text>
+        <Text style={styles.sectionTitle}><FontAwesome5 name="shield-alt" size={24} color="black" /> Safety First</Text>
         <View style={styles.safetyCard}>
           <Text style={styles.safetyText}>
             • Always follow local fire restrictions and warnings{'\n'}
@@ -121,21 +131,21 @@ export default function HomePage({ onNavigateToPrediction, onNavigateToHistory, 
           style={styles.primaryButton} 
           onPress={onNavigateToPrediction}
         >
-          <Text style={styles.primaryButtonText}>🔍 Start Risk Assessment</Text>
+          <Text style={styles.primaryButtonText}>Start Risk Assessment</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.secondaryButton} 
           onPress={onNavigateToHistory}
         >
-          <Text style={styles.secondaryButtonText}>📋 View Prediction History</Text>
+          <Text style={styles.secondaryButtonText}>View Prediction History</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.mapButton} 
           onPress={onNavigateToRiskMap}
         >
-          <Text style={styles.mapButtonText}>🗺️ View Risk Map</Text>
+          <Text style={styles.mapButtonText}>View Risk Map</Text>
         </TouchableOpacity>
       </View>
 
@@ -322,7 +332,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mapButton: {
-    backgroundColor: '#4a7c59',
+    backgroundColor: '#2d5a27',
     paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 25,

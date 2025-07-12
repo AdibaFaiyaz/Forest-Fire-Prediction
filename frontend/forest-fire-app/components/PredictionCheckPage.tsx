@@ -219,9 +219,9 @@ export default function PredictionCheckPage({ onBack, onPredictionResult, onNavi
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Text style={styles.backButtonText}>← Back</Text>
+          <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>🔍 Fire Risk Prediction</Text>
+        <Text style={styles.title}>Fire Risk Prediction</Text>
         <Text style={styles.subtitle}>Enter Weather Data for Assessment</Text>
       </View>
 
@@ -364,7 +364,7 @@ export default function PredictionCheckPage({ onBack, onPredictionResult, onNavi
                 <Text style={[styles.buttonText, { marginLeft: 8 }]}>Saving...</Text>
               </View>
             ) : (
-              <Text style={styles.buttonText}>🔍 Predict Fire Risk</Text>
+              <Text style={styles.buttonText}>Predict Fire Risk</Text>
             )}
           </TouchableOpacity>
 
@@ -372,7 +372,7 @@ export default function PredictionCheckPage({ onBack, onPredictionResult, onNavi
             style={[styles.button, styles.clearButton]} 
             onPress={clearForm}
           >
-            <Text style={styles.clearButtonText}>🗑️ Clear Form</Text>
+            <Text style={styles.clearButtonText}>Clear Form</Text>
           </TouchableOpacity>
         </View>
       </View>

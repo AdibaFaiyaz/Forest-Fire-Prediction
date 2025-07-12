@@ -1,4 +1,7 @@
 import React from 'react';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Feather from '@expo/vector-icons/Feather';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { 
   StyleSheet, 
   Text, 
@@ -13,6 +16,10 @@ const { width } = Dimensions.get('window');
 
 interface PredictionOutcomeProps {
   onBack: () => void;
+  onNavigateToHome?: () => void;
+  onNavigateToRiskMap?: () => void;
+  onNavigateToHistory?: () => void;
+  onNavigateToSettings?: () => void;
   prediction: {
     fire_risk: boolean;
     risk_score: number;
@@ -32,7 +39,7 @@ interface PredictionOutcomeProps {
   };
 }
 
-export default function PredictionOutcome({ onBack, prediction, formData }: PredictionOutcomeProps) {
+export default function PredictionOutcome({ onBack, onNavigateToHome, onNavigateToRiskMap, onNavigateToHistory, onNavigateToSettings, prediction, formData }: PredictionOutcomeProps) {
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel.toLowerCase()) {
       case 'high': return '#FF4444';
@@ -203,23 +210,23 @@ export default function PredictionOutcome({ onBack, prediction, formData }: Pred
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navIcon}>🏠</Text>
+        <TouchableOpacity style={styles.navButton} onPress={onNavigateToHome}>
+          <Text style={styles.navIcon}><AntDesign name="home" size={24} color="black" /></Text>
           <Text style={styles.navLabel}>Home</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity style={[styles.navButton, styles.activeNavButton]}>
-          <Text style={styles.navIcon}>📊</Text>
-          <Text style={styles.navLabel}>Analytics</Text>
+        <TouchableOpacity style={[styles.navButton, styles.activeNavButton]} onPress={onNavigateToRiskMap}>
+          <Text style={styles.navIcon}><Feather name="map-pin" size={24} color="black" /></Text>
+          <Text style={styles.navLabel}>Map</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navIcon}>🔔</Text>
-          <Text style={styles.navLabel}>Alerts</Text>
+        <TouchableOpacity style={styles.navButton} onPress={onNavigateToHistory}>
+          <Text style={styles.navIcon}><MaterialCommunityIcons name="history" size={24} color="black" /></Text>
+          <Text style={styles.navLabel}>History</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.navButton}>
-          <Text style={styles.navIcon}>⚙️</Text>
+        <TouchableOpacity style={styles.navButton} onPress={onNavigateToSettings}>
+          <Text style={styles.navIcon}><Feather name="settings" size={24} color="black" /></Text>
           <Text style={styles.navLabel}>Settings</Text>
         </TouchableOpacity>
       </View>

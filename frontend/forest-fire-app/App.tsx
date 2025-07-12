@@ -6,6 +6,7 @@ import PredictionCheckPage from './components/PredictionCheckPage';
 import PredictionOutcome from './components/PredictionOutcome';
 import PredictionHistory from './components/PredictionHistory';
 import RiskMap from './components/RiskMap';
+import SettingsScreen from './components/Settings';
 
 interface PredictionResult {
   fire_risk: boolean;
@@ -14,7 +15,7 @@ interface PredictionResult {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'prediction' | 'outcome' | 'history' | 'riskMap'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'prediction' | 'outcome' | 'history' | 'riskMap' | 'settings'>('home');
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
   const [formData, setFormData] = useState<any>(null);
 
@@ -32,6 +33,10 @@ export default function App() {
 
   const navigateToRiskMap = () => {
     setCurrentPage('riskMap');
+  };
+
+  const navigateToSettings = () => {
+    setCurrentPage('settings');
   };
 
   const navigateToOutcome = (result: PredictionResult, data: any) => {
@@ -63,6 +68,10 @@ export default function App() {
       {currentPage === 'outcome' && (
         <PredictionOutcome 
           onBack={navigateToHome} 
+          onNavigateToHome={navigateToHome}
+          onNavigateToRiskMap={navigateToRiskMap}
+          onNavigateToHistory={navigateToHistory}
+          onNavigateToSettings={navigateToSettings}
           prediction={predictionResult}
           formData={formData}
         />
@@ -74,6 +83,10 @@ export default function App() {
 
       {currentPage === 'riskMap' && (
         <RiskMap onBack={navigateToHome} />
+      )}
+
+      {currentPage === 'settings' && (
+        <SettingsScreen onBack={navigateToHome} />
       )}
     </SafeAreaView>
   );

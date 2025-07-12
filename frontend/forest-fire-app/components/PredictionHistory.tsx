@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {
   StyleSheet,
   Text,
@@ -165,13 +166,14 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>📋 Prediction History</Text>
+        <Text style={styles.title}>Prediction History</Text>
         <Text style={styles.subtitle}>View all saved fire risk assessments</Text>
       </View>
 
       {/* Content */}
       <ScrollView
         style={styles.content}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -228,11 +230,8 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
                           deleteEntry(entry.id);
                         }}
                       >
-                        <Text style={styles.deleteButtonText}>🗑️</Text>
+                        <Text style={styles.deleteButtonText}><FontAwesome6 name="trash" size={15} color="gray" /></Text>
                       </TouchableOpacity>
-                      <Text style={styles.expandIcon}>
-                        {isExpanded ? '▼' : '▶'}
-                      </Text>
                     </View>
                   </View>
 
@@ -298,10 +297,10 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
                       {/* Additional Info */}
                       <View style={styles.additionalInfo}>
                         <Text style={styles.infoText}>
-                          📅 {getMonthName(entry.month)} • {getDayName(entry.day)}
+                           {getMonthName(entry.month)} • {getDayName(entry.day)}
                         </Text>
                         <Text style={styles.infoText}>
-                          🔥 Fire Risk: {entry.fireRisk ? 'YES' : 'NO'}
+                          Fire Risk: {entry.fireRisk ? 'YES' : 'NO'}
                         </Text>
                       </View>
                     </View>
@@ -317,6 +316,7 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
 }
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
@@ -362,7 +362,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
-    paddingBottom: 30,
+    paddingBottom: 40,
+  },
+  scrollContent: {
+    paddingBottom: 20,
   },
   statsText: {
     fontSize: 16,
@@ -397,7 +400,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 15,
     padding: 15,
-    marginBottom: 15,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
