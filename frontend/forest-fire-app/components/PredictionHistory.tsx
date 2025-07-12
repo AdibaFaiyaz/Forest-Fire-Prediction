@@ -39,6 +39,7 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
   const [historyData, setHistoryData] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   const fetchHistoryData = async () => {
     try {
@@ -64,6 +65,18 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
       setLoading(false);
       setRefreshing(false);
     }
+  };
+
+  const toggleCardExpansion = (cardId: string) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
   };
 
   const deleteEntry = async (id: string) => {
@@ -178,89 +191,124 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
               Total Predictions: {historyData.length}
             </Text>
             
-            {historyData.map((entry, index) => (
-              <View key={entry.id} style={styles.historyCard}>
-                {/* Header Row */}
-                <View style={styles.cardHeader}>
-                  <View style={styles.cardHeaderLeft}>
-                    <Text style={styles.entryNumber}>#{historyData.length - index}</Text>
-                    <Text style={styles.entryDate}>{formatDate(entry.timestamp)}</Text>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() => deleteEntry(entry.id)}
-                  >
-                    <Text style={styles.deleteButtonText}>🗑️</Text>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Risk Assessment */}
-                <View style={[styles.riskBadge, { backgroundColor: getRiskColor(entry.predictedRisk) }]}>
-                  <Text style={styles.riskText}>
-                    {entry.predictedRisk?.toUpperCase() || 'UNKNOWN'} RISK
-                  </Text>
-                  <Text style={styles.riskScore}>
-                    {(entry.riskScore * 100).toFixed(1)}%
-                  </Text>
-                </View>
-
-                {/* Weather Data */}
-                <View style={styles.weatherSection}>
-                  <Text style={styles.sectionTitle}>Weather Conditions</Text>
-                  <View style={styles.weatherGrid}>
-                    <View style={styles.weatherItem}>
-                      <Text style={styles.weatherLabel}>Temperature</Text>
-                      <Text style={styles.weatherValue}>{entry.temp}°C</Text>
+            {historyData.map((entry, index) => {
+              const isExpanded = expandedCards.has(entry.id);
+              
+              return (
+                <TouchableOpacity
+                  key={entry.id}
+                  style={[
+                    styles.historyCard,
+                    isExpanded && styles.expandedCard
+                  ]}
+                  onPress={() => toggleCardExpansion(entry.id)}
+                  activeOpacity={0.7}
+                >
+                  {/* Compact View */}
+                  <View style={styles.compactView}>
+                    <View style={styles.compactLeft}>
+                      <Text style={styles.compactTitle}>#{historyData.length - index}</Text>
+                      <Text style={styles.compactDate}>{formatDate(entry.timestamp)}</Text>
                     </View>
-                    <View style={styles.weatherItem}>
-                      <Text style={styles.weatherLabel}>Humidity</Text>
-                      <Text style={styles.weatherValue}>{entry.RH}%</Text>
+                    
+                    <View style={styles.compactCenter}>
+                      <View style={[styles.compactRiskBadge, { backgroundColor: getRiskColor(entry.predictedRisk) }]}>
+                        <Text style={styles.compactRiskText}>
+                          {entry.predictedRisk?.toUpperCase() || 'UNKNOWN'}
+                        </Text>
+                      </View>
+                      <Text style={styles.compactTemp}>{entry.temp}°C</Text>
                     </View>
-                    <View style={styles.weatherItem}>
-                      <Text style={styles.weatherLabel}>Wind Speed</Text>
-                      <Text style={styles.weatherValue}>{entry.wind} km/h</Text>
-                    </View>
-                    <View style={styles.weatherItem}>
-                      <Text style={styles.weatherLabel}>Rainfall</Text>
-                      <Text style={styles.weatherValue}>{entry.rain} mm</Text>
+                    
+                    <View style={styles.compactRight}>
+                      <TouchableOpacity
+                        style={styles.deleteButton}
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          deleteEntry(entry.id);
+                        }}
+                      >
+                        <Text style={styles.deleteButtonText}>🗑️</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.expandIcon}>
+                        {isExpanded ? '▼' : '▶'}
+                      </Text>
                     </View>
                   </View>
-                </View>
 
-                {/* Fire Indices */}
-                <View style={styles.indicesSection}>
-                  <Text style={styles.sectionTitle}>Fire Weather Indices</Text>
-                  <View style={styles.indicesGrid}>
-                    <View style={styles.indexItem}>
-                      <Text style={styles.indexLabel}>FFMC</Text>
-                      <Text style={styles.indexValue}>{entry.FFMC}</Text>
-                    </View>
-                    <View style={styles.indexItem}>
-                      <Text style={styles.indexLabel}>DMC</Text>
-                      <Text style={styles.indexValue}>{entry.DMC}</Text>
-                    </View>
-                    <View style={styles.indexItem}>
-                      <Text style={styles.indexLabel}>DC</Text>
-                      <Text style={styles.indexValue}>{entry.DC}</Text>
-                    </View>
-                    <View style={styles.indexItem}>
-                      <Text style={styles.indexLabel}>ISI</Text>
-                      <Text style={styles.indexValue}>{entry.ISI}</Text>
-                    </View>
-                  </View>
-                </View>
+                  {/* Expanded Details */}
+                  {isExpanded && (
+                    <View style={styles.expandedDetails}>
+                      {/* Risk Assessment */}
+                      <View style={[styles.riskBadge, { backgroundColor: getRiskColor(entry.predictedRisk) }]}>
+                        <Text style={styles.riskText}>
+                          {entry.predictedRisk?.toUpperCase() || 'UNKNOWN'} RISK
+                        </Text>
+                        <Text style={styles.riskScore}>
+                          {(entry.riskScore * 100).toFixed(1)}%
+                        </Text>
+                      </View>
 
-                {/* Additional Info */}
-                <View style={styles.additionalInfo}>
-                  <Text style={styles.infoText}>
-                    📅 {getMonthName(entry.month)} • {getDayName(entry.day)}
-                  </Text>
-                  <Text style={styles.infoText}>
-                    🔥 Fire Risk: {entry.fireRisk ? 'YES' : 'NO'}
-                  </Text>
-                </View>
-              </View>
-            ))}
+                      {/* Weather Data */}
+                      <View style={styles.weatherSection}>
+                        <Text style={styles.sectionTitle}>Weather Conditions</Text>
+                        <View style={styles.weatherGrid}>
+                          <View style={styles.weatherItem}>
+                            <Text style={styles.weatherLabel}>Temperature</Text>
+                            <Text style={styles.weatherValue}>{entry.temp}°C</Text>
+                          </View>
+                          <View style={styles.weatherItem}>
+                            <Text style={styles.weatherLabel}>Humidity</Text>
+                            <Text style={styles.weatherValue}>{entry.RH}%</Text>
+                          </View>
+                          <View style={styles.weatherItem}>
+                            <Text style={styles.weatherLabel}>Wind Speed</Text>
+                            <Text style={styles.weatherValue}>{entry.wind} km/h</Text>
+                          </View>
+                          <View style={styles.weatherItem}>
+                            <Text style={styles.weatherLabel}>Rainfall</Text>
+                            <Text style={styles.weatherValue}>{entry.rain} mm</Text>
+                          </View>
+                        </View>
+                      </View>
+
+                      {/* Fire Indices */}
+                      <View style={styles.indicesSection}>
+                        <Text style={styles.sectionTitle}>Fire Weather Indices</Text>
+                        <View style={styles.indicesGrid}>
+                          <View style={styles.indexItem}>
+                            <Text style={styles.indexLabel}>FFMC</Text>
+                            <Text style={styles.indexValue}>{entry.FFMC}</Text>
+                          </View>
+                          <View style={styles.indexItem}>
+                            <Text style={styles.indexLabel}>DMC</Text>
+                            <Text style={styles.indexValue}>{entry.DMC}</Text>
+                          </View>
+                          <View style={styles.indexItem}>
+                            <Text style={styles.indexLabel}>DC</Text>
+                            <Text style={styles.indexValue}>{entry.DC}</Text>
+                          </View>
+                          <View style={styles.indexItem}>
+                            <Text style={styles.indexLabel}>ISI</Text>
+                            <Text style={styles.indexValue}>{entry.ISI}</Text>
+                          </View>
+                        </View>
+                      </View>
+
+                      {/* Additional Info */}
+                      <View style={styles.additionalInfo}>
+                        <Text style={styles.infoText}>
+                          📅 {getMonthName(entry.month)} • {getDayName(entry.day)}
+                        </Text>
+                        <Text style={styles.infoText}>
+                          🔥 Fire Risk: {entry.fireRisk ? 'YES' : 'NO'}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </>
         )}
       </ScrollView>
@@ -314,6 +362,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+    paddingBottom: 30,
   },
   statsText: {
     fontSize: 16,
@@ -347,7 +396,7 @@ const styles = StyleSheet.create({
   historyCard: {
     backgroundColor: '#fff',
     borderRadius: 15,
-    padding: 20,
+    padding: 15,
     marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -355,30 +404,67 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15,
+  expandedCard: {
+    padding: 20,
+    marginBottom: 20,
   },
-  cardHeaderLeft: {
+  compactView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  compactLeft: {
     flex: 1,
   },
-  entryNumber: {
-    fontSize: 18,
+  compactTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#2d5a27',
   },
-  entryDate: {
-    fontSize: 14,
+  compactDate: {
+    fontSize: 12,
     color: '#666',
     marginTop: 2,
   },
+  compactCenter: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  compactRiskBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 4,
+  },
+  compactRiskText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  compactTemp: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  compactRight: {
+    alignItems: 'center',
+  },
   deleteButton: {
     padding: 8,
+    marginBottom: 4,
   },
   deleteButtonText: {
-    fontSize: 18,
+    fontSize: 16,
+  },
+  expandIcon: {
+    fontSize: 12,
+    color: '#666',
+  },
+  expandedDetails: {
+    marginTop: 15,
+    paddingTop: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
   },
   riskBadge: {
     padding: 15,
