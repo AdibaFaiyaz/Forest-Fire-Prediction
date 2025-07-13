@@ -209,7 +209,7 @@ export default function PredictionHistory({ onBack }: PredictionHistoryProps) {
                   {/* Compact View */}
                   <View style={styles.compactView}>
                     <View style={styles.compactLeft}>
-                      <Text style={styles.compactTitle}>#{historyData.length - index}</Text>
+                      <Text style={styles.compactTitle}>{historyData.length - index}</Text>
                       <Text style={styles.compactDate}>{formatDate(entry.timestamp)}</Text>
                     </View>
                     

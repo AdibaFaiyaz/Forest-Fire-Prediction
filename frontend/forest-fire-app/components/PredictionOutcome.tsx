@@ -128,9 +128,8 @@ export default function PredictionOutcome({ onBack, onNavigateToHome, onNavigate
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Text style={styles.backButtonText}>← Fire Risk Prediction</Text>
-        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Fire Risk Assessment</Text>
+        <Text style={styles.headerSubtitle}>AI-Powered Prediction Results</Text>
       </View>
 
       {/* Risk Level Section */}
@@ -240,20 +239,36 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    backgroundColor: '#fff',
-    padding: 20,
-    paddingTop: 50,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    backgroundColor: '#2d5a27',
+    padding: 30,
+    paddingTop: 60,
+    alignItems: 'center',
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
   },
   backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    position: 'absolute',
+    left: 20,
+    top: 60,
+    zIndex: 1,
   },
   backButtonText: {
     fontSize: 16,
-    color: '#333',
+    color: '#b8e6b8',
     fontWeight: '500',
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: '#b8e6b8',
+    fontWeight: '600',
+    textAlign: 'center',
   },
   riskSection: {
     backgroundColor: '#fff',
