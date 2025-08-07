@@ -65,4 +65,19 @@ cd frontend
 npx expo start
 ```
 
+### 🏠 Home Page
+
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/17f915b7-af70-4add-81a7-c26fcf0d65f7" />
+
+### 📋 Home Page Scroll
+
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/791ddf8a-bd32-41d7-a8df-b6ddb4cfabe8" />
+
+### 📋 Prediction History
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/d517539f-4c07-4513-a860-6faa983a7cb6" />
+
+### 📋 Map
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/b31b4922-4b0c-485a-b9a0-d43ac01a89b1" />
+
+---
 Make sure your phone and server are on the same Wi-Fi for local requests.
