@@ -115,9 +115,9 @@ export default function PredictionCheckPage({ onBack, onPredictionResult, onNavi
 
     // Try multiple API endpoints
     const apiEndpoints = [
-      'http://localhost:5000/predict',
-      'http://127.0.0.1:5000/predict',
-      'http://192.168.1.10:5000/predict'
+      'http://localhost:5001/predict',
+      'http://127.0.0.1:5001/predict',
+      'http://192.168.1.10:5001/predict'
     ];
 
     let lastError = '';
